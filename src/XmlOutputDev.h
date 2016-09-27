@@ -528,6 +528,14 @@ public:
    * @param fullFontName To know if the fullFontName option is selected */
   void dump(GBool blocks, GBool fullFontName);
   
+  /** PL: insert a block in the page's list of block nodes according to the reading order
+   * @param nodeblock the block node to be inserted 
+   * @param lastInserted boolean indicating if the previously added block node was inserted before 
+   * an existing node (value is true) or append top the list (value is false) 
+   * @return true the node is the inserted before an existing node, false if it is append to the list 
+   */  
+  GBool addBlockChildReadingOrder(xmlNodePtr nodeblock, GBool lastInserted);
+
   /** Add a specific TOKEN tag in the current line when we meet an image inline.
    * This TOKEN tag is empty and it has five attributes which are : x, y, width,  
    * height and href which get the uri of image inline.
@@ -783,6 +791,8 @@ private:
   
   /** To keep text in content stream order */
   GBool rawOrder;
+  /** PL: To modify the blocks in reading order */
+  GBool readingOrder;
   /** To know if the verbose option is selected */
   GBool verbose;
   /** To know if the cutPages option is selected */

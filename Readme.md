@@ -8,9 +8,9 @@ This following modifications have been made:
 
 - output coordinates of BLOCK elements when the -block option is selected,
 
-- add a parameter -readingOrder which re-order the blocks in the reading order when the -block option is selected. By default in pdf2xml, the elements follow the PDF content stream (the so called _raw order_). In pdf2txt from xpdf, several order are available including the raw order and the reading order. With this added option, only the blocks are re-ordered.
+- add a parameter -readingOrder which re-order the blocks following the reading order when the -block option is selected. By default in pdf2xml, the elements follow the PDF content stream (the so-called _raw order_). In pdf2txt from xpdf, several text flow orders are available including the raw order and the reading order. With this modification and this new option, only the blocks are re-ordered.
 
-From our experiments, the raw order can diverge quite radically from the order of elements according to the visual/reading layout in 2-4% of PDF (e.g. title element introduced at the end of the page element, while visually present at the top of the page), and minor changes can be present in up to 100% of PDF for some scientific publishers (e.g. headnote introduce at the end of the page content). This modification is thus quite useful for further information/structure extraction applications. 
+From our experiments, the raw order can diverge quite radically from the order of elements according to the visual/reading layout in 2-4% of PDF (e.g. title element is introduced at the end of the page element, while visually present at the top of the page), and minor changes can be present in up to 100% of PDF for some scientific publishers (e.g. headnote introduce at the end of the page content). This additional mode can be thus quite useful for information/structure extraction applications exploiting pdf2xml output. 
 
 - use the latest version of xpdf, version 3.04.
 

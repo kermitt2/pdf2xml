@@ -81,6 +81,12 @@ public:
 	 */
 	GBool getImageInline() {return imageInline;}
 	
+	/** PL: Return a boolean which inform if the blocks should follow the reading order rather than the 
+	 *  PDF content stream one
+	 * @return <code>true</code> if the readingOrder option is selected, <code>false</code> otherwise
+	 */
+	GBool getReadingOrder() {return readingOrder;}
+
 	/** Modify the boolean which inform if the images are displayed
 	 * @param noImage <code>true</code> if the noImage option is not selected, <code>false</code> otherwise
 	 */
@@ -115,6 +121,11 @@ public:
 	 * @param imageInline <code>true</code> if the noImageInline option is selected, <code>false</code> otherwise
 	 */	
 	void setImageInline(GBool imageInline);
+
+	/** PL: Modifiy the boolean which inform if the blocks should follow the reading order
+	 * @param readingOrder <code>true</code> if the readingOrder option is selected, <code>false</code> otherwise
+	 */	
+	void setReadingOrder(GBool readingOrders);
 	
 	void saveToXML(const char *fileName,int firstPage,int lastPage);
 	
@@ -134,6 +145,8 @@ private:
 	GBool fullFontName;
 	/** The value of the noImageInline option */
 	GBool imageInline;
+	/** PL: The value of the readingOrder option */
+	GBool readingOrder;
   
 };
 

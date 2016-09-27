@@ -70,6 +70,13 @@ void Parameters::setImageInline(GBool imagesInline) {
   unlockGlobalParams;
 }
 
+// PL
+void Parameters::setReadingOrder(GBool readingOrders) {
+  lockGlobalParams;
+  readingOrder = readingOrders;
+  unlockGlobalParams;
+}
+
 void Parameters::saveToXML(const char *fileName,int firstPage,int lastPage){
 	char* tmp;
   	tmp=(char*)malloc(10*sizeof(char));
@@ -106,6 +113,7 @@ void Parameters::saveToXML(const char *fileName,int firstPage,int lastPage){
 // * -annots : create an annotaitons file xml<br/>
 // * -cutPages : cut all pages in separately files<br/>
 // * -blocks : add blocks informations whithin the structure<br/>
+// * -readingOrder : blocks follow the reading order<br/>	
 // * -fullFontName : fonts names are not normalized<br/>
 // * -nsURI : add the specified namespace URI<br/>
 // * -q : don't print any messages or errors<br/>

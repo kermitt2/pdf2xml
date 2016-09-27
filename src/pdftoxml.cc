@@ -71,6 +71,7 @@ static GBool blocks = gFalse;
 static GBool fullFontName = gFalse;
 static GBool noImageInline = gFalse;
 static GBool annots = gFalse;
+static GBool readingOrder = gFalse;
 
 static char ownerPassword[33] = "\001";
 static char userPassword[33] = "\001";
@@ -100,6 +101,8 @@ static ArgDesc argDesc[] = {
    "cut all pages in separately files"},
   {"-blocks", argFlag,     &blocks,  0,
    "add blocks informations whithin the structure"},
+  {"-readingOrder", argFlag,     &readingOrder,  0,
+   "blocks follow the reading order"},
   {"-fullFontName", argFlag,     &fullFontName,  0,
    "fonts names are not normalized"},
   {"-nsURI", argString,     namespaceUri,  sizeof(namespaceUri),
@@ -141,6 +144,7 @@ static ArgDesc argDesc[] = {
  * -annots : create an annotaitons file xml<br/>
  * -cutPages : cut all pages in separately files<br/>
  * -blocks : add blocks informations whithin the structure<br/>
+ * -readingOrder : blocks follow the reading order<br/>
  * -fullFontName : fonts names are not normalized<br/>
  * -nsURI : add the specified namespace URI<br/>
  * -q : don't print any messages or errors<br/>
@@ -239,6 +243,11 @@ int main(int argc, char *argv[]) {
   }
   else{
     parameters->setDisplayBlocks(gFalse);
+  }
+
+  if(readingOrder){
+    parameters->setReadingOrder(gTrue);
+    cmd->append("-readingOrder ");
   }
   
   if(fullFontName){
@@ -448,7 +457,7 @@ void removeAlreadyExistingData(GString *dir) {
 			file = new GString(dir);
 			file->append("/");
 			file->append(lecture->d_name);
-			std::remove(file->getCString());
+			remove(file->getCString());
    		}
    		if (file) delete file;
    		closedir(rep);

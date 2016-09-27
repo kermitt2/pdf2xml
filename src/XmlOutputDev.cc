@@ -22,11 +22,13 @@
 
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
+#include <libxml/uri.h>
 #include <time.h>
 #include <string>
 #include <list>
 #include <vector>
 #include <stack>
+#include <cmath> // PL: for using std::abs
 
 #include <iostream>
 using namespace std;
@@ -529,7 +531,12 @@ TextPage::TextPage(GBool verboseA, Catalog *catalog, xmlNodePtr node,
 	root = node;
 	verbose = verboseA;
 	rawOrder = 1;
-
+	
+	// PL: to modify block order according to reading order
+	if (parameters->getReadingOrder())
+		readingOrder = 1;
+	else
+		readingOrder = 0;
 	curWord = NULL;
 	charPos = 0;
 	curFont = NULL;
@@ -853,6 +860,59 @@ void TextPage::endPage(GString *dataDir) {
 		delete relname;
 	}
 	xmlFreeDoc(vecdoc);
+
+	// PL: here we look at the blocks order
+	/*if (readingOrder) {
+		cout  << endl << "new page" << endl;
+		xmlNode *cur_node = NULL;
+		// we get the first child of the current page node
+		unsigned long nbChildren = xmlChildElementCount(page);
+		if (nbChildren > 0) {
+			xmlNodePtr firstPageItem = xmlFirstElementChild(page);
+			// we get all the block nodes in the XML tree corresponding to the page
+			for (cur_node = firstPageItem; cur_node; cur_node = cur_node->next) {
+	        	if ( (cur_node->type == XML_ELEMENT_NODE) && (strcmp((const char*)cur_node->name, TAG_BLOCK) ==0) ) {
+	        		cout << "node type: Element, name: " << cur_node->name << endl;
+					// if a block is located in the layout above another block and 
+					// there is not overlapping surface on the x axis between the blocks
+					// we can swap the blocks
+	        		double currentMinX = 0;
+					double currentMinY = 0;
+					double currentMaxX = 0;
+					double currentMaxY = 0;
+					
+					xmlChar *attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_X);
+					if (attrValue != NULL) {
+						cout << "X: " << attrValue << endl;
+						xmlFree(attrValue);
+					}
+
+					attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_Y);
+					if (attrValue != NULL) {
+						cout << "Y:" << attrValue << endl;
+						xmlFree(attrValue);
+					}
+
+					attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_HEIGHT);
+					if (attrValue != NULL) {
+						cout << "height: " << attrValue << endl;
+						xmlFree(attrValue);
+					}
+
+					attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_WIDTH);
+					if (attrValue != NULL) {
+						cout << "width: " << attrValue << endl;
+						xmlFree(attrValue);
+					}
+
+					xmlAttrPtr attX = xmlHasProp(cur_node, (const xmlChar*)ATTR_X);
+					xmlAttrPtr attY = xmlHasProp(cur_node, (const xmlChar*)ATTR_Y);
+					xmlAttrPtr attHeight = xmlHasProp(cur_node, (const xmlChar*)ATTR_HEIGHT);
+					xmlAttrPtr attWidth = xmlHasProp(cur_node, (const xmlChar*)ATTR_WIDTH);
+	        	}
+	        }
+	    }
+	}*/
 
 	// IF cutter is ok we build the file name for all pages separately  
 	// and save all files in the data directory
@@ -1438,9 +1498,12 @@ void TextPage::testLinkedText(xmlNodePtr node,double xMin,double yMin,double xMa
 							if (uri->isOk())
 							{
 								GString* dest = uri->getURI();
-								if (dest != NULL)
-								{
-									xmlNewProp(node, (const xmlChar*)ATTR_URILINK,(const xmlChar*)dest->getCString());
+								if (dest != NULL) {
+									// PL: the uri here must be well formed to avoid not wellformed XML!
+									xmlChar* name_uri = xmlURIEscape((const xmlChar*)dest->getCString());
+									//xmlNewProp(node, (const xmlChar*)ATTR_URILINK,(const xmlChar*)dest->getCString());
+									xmlNewProp(node, (const xmlChar*)ATTR_URILINK, name_uri);
+									free(name_uri); // PL
 									return;
 								}
 							}
@@ -1483,6 +1546,7 @@ void TextPage::testLinkedText(xmlNodePtr node,double xMin,double yMin,double xMa
 												sprintf(tmp,"p-%d %g %g",page,x,y);
 												xmlNewProp(node, (const xmlChar*)ATTR_GOTOLINK,(const xmlChar*)tmp);
 //												printf("link %d %g %g\n",page,x,y);
+												free(tmp); // PL
 												return;
 											//}
 										}
@@ -1493,6 +1557,7 @@ void TextPage::testLinkedText(xmlNodePtr node,double xMin,double yMin,double xMa
 									case destFitB: case destFitBH: case destFitBV:
 										sprintf(tmp,"p-%d",page);
 										xmlNewProp(node, (const xmlChar*)ATTR_GOTOLINK,(const xmlChar*)tmp);
+										free(tmp); // PL
 										return;
 									}
 
@@ -1608,6 +1673,7 @@ void TextPage::dump(GBool blocks, GBool fullFontName) {
 	GBool lineFinish= gFalse;
 	GBool newBlock= gFalse;
 	GBool endPage= gFalse;
+	GBool lastBlockInserted = gFalse; // true if the last added block is inserted before an existing node, false is appended
 
 	// Informations about the current line
 	double lineX = 0;
@@ -1640,7 +1706,8 @@ void TextPage::dump(GBool blocks, GBool fullFontName) {
 		nodeblocks = xmlNewNode(NULL, (const xmlChar*)TAG_BLOCK);
 		nodeblocks->type = XML_ELEMENT_NODE;
 
-		xmlAddChild(page, nodeblocks);
+		// PL: block is added when finished
+		//xmlAddChild(page, nodeblocks);
 		id = new GString("p");
 		xmlNewProp(nodeblocks, (const xmlChar*)ATTR_ID,
 				(const xmlChar*)buildIdBlock(num, numBlock, id)->getCString());
@@ -2095,16 +2162,84 @@ void TextPage::dump(GBool blocks, GBool fullFontName) {
 						newBlock = gTrue;
 					}
 				}
+
+				// PL: check if X and Y coordinates of the current block are present
+				// and set them if it's not the case
+				if (nodeblocks != NULL) {
+					// get block X and Y
+					xmlChar *attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_X);
+					if (attrValue == NULL) {
+						// set the X attribute
+						if (lineX != 0) {
+							sprintf(tmp, ATTR_NUMFORMAT, lineX);
+							xmlNewProp(nodeblocks, (const xmlChar*)ATTR_X, (const xmlChar*)tmp);
+						}
+					} else
+						xmlFree(attrValue);
+
+					attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_Y);
+					if (attrValue == NULL) {
+						// set the Y attribute
+						if (lineYmin != 0) {
+							sprintf(tmp, ATTR_NUMFORMAT, lineYmin);
+							xmlNewProp(nodeblocks, (const xmlChar*)ATTR_Y, (const xmlChar*)tmp);
+						}
+					} else
+						xmlFree(attrValue);
+				}
+
 				xmlAddChild(nodeblocks, nodeline);
 			} else {
 				if (newBlock) {
+					// PL: previous block height and width
+					if (nodeblocks != NULL) {
+						// get block X and Y
+						double blockX = 0;
+						double blockY = 0;
+						xmlChar *attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_X);
+						if (attrValue != NULL) {
+							blockX = atof((const char*)attrValue);
+							xmlFree(attrValue);
+						}
+						attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_Y);
+						if (attrValue != NULL) {
+							blockY = atof((const char*)attrValue);
+							xmlFree(attrValue);
+						}
+
+						double blockWidth = std::abs((linePreviousX + linePreviousWidth) - blockX);
+						double blockHeight = std::abs((linePreviousYmin + linePreviousHeight) - blockY);
+
+						sprintf(tmp, ATTR_NUMFORMAT, blockHeight);
+						xmlNewProp(nodeblocks, (const xmlChar*)ATTR_HEIGHT, (const xmlChar*)tmp);
+						sprintf(tmp, ATTR_NUMFORMAT, blockWidth);
+						xmlNewProp(nodeblocks, (const xmlChar*)ATTR_WIDTH, (const xmlChar*)tmp);
+
+						// adding previous block to the page element
+						if (readingOrder)
+							lastBlockInserted = addBlockChildReadingOrder(nodeblocks, lastBlockInserted);
+						else
+							xmlAddChild(page, nodeblocks);
+					}
+
 					nodeblocks = xmlNewNode(NULL, (const xmlChar*)TAG_BLOCK);
 					nodeblocks->type = XML_ELEMENT_NODE;
-					xmlAddChild(page, nodeblocks);
+					// PL: block is added when finished
+					//xmlAddChild(page, nodeblocks);
 					id = new GString("p");
 					xmlNewProp(nodeblocks, (const xmlChar*)ATTR_ID,
 							(const xmlChar*)buildIdBlock(num, numBlock, id)->getCString());
 					delete id;
+
+					// PL: new block X and Y
+					if (lineX != 0) {
+						sprintf(tmp, ATTR_NUMFORMAT, lineX);
+						xmlNewProp(nodeblocks, (const xmlChar*)ATTR_X, (const xmlChar*)tmp);
+					}
+					if (lineYmin != 0) {
+						sprintf(tmp, ATTR_NUMFORMAT, lineYmin);
+						xmlNewProp(nodeblocks, (const xmlChar*)ATTR_Y, (const xmlChar*)tmp);
+					}
 					numBlock = numBlock + 1;
 					xmlAddChild(nodeblocks, nodeline);
 					newBlock = gFalse;
@@ -2115,16 +2250,95 @@ void TextPage::dump(GBool blocks, GBool fullFontName) {
 							&& ((lineYmin - linePreviousYmin)
 									< (linePreviousFontSize
 											* maxLineSpacingDelta))) {
+						if (endPage) {
+							// PL: check if the width and the height of the current block are present
+							// and set them if it's not the case
+							if (nodeblocks != NULL) {
+								// check width and height
+								xmlChar *attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_HEIGHT);
+								if (attrValue == NULL) {
+									// set the height attribute
+									double blockY = 0;
+									attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_Y);
+									if (attrValue != NULL) {
+										blockY = atof((const char*)attrValue);
+										xmlFree(attrValue);
+									}
+									double blockHeight = std::abs((linePreviousYmin + linePreviousHeight) - blockY);
+									sprintf(tmp, ATTR_NUMFORMAT, blockHeight);
+									xmlNewProp(nodeblocks, (const xmlChar*)ATTR_HEIGHT, (const xmlChar*)tmp);
+								} else
+									xmlFree(attrValue);
+
+								attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_WIDTH);
+								if (attrValue == NULL) {
+									// set the width attribute
+									double blockX = 0;
+									xmlChar *attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_X);
+									if (attrValue != NULL) {
+										blockX = atof((const char*)attrValue);
+										xmlFree(attrValue);
+									}
+									double blockWidth = std::abs((linePreviousX + linePreviousWidth) - blockX);
+									sprintf(tmp, ATTR_NUMFORMAT, blockWidth);
+									xmlNewProp(nodeblocks, (const xmlChar*)ATTR_WIDTH, (const xmlChar*)tmp);
+								} else
+									xmlFree(attrValue);
+							}
+						}
+
 						xmlAddChild(nodeblocks, nodeline);
 					} else {
-						nodeblocks
-								= xmlNewNode(NULL, (const xmlChar*)TAG_BLOCK);
+						// PL: previous block height and width
+						if (nodeblocks != NULL) {
+							// get block X and Y
+							double blockX = 0;
+							double blockY = 0;
+							xmlChar *attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_X);
+							if (attrValue != NULL) {
+								blockX = atof((const char*)attrValue);
+								xmlFree(attrValue);
+							}
+							attrValue = xmlGetProp(nodeblocks, (const xmlChar*)ATTR_Y);
+							if (attrValue != NULL) {
+								blockY = atof((const char*)attrValue);
+								xmlFree(attrValue);
+							}
+
+							double blockWidth = std::abs((linePreviousX + linePreviousWidth) - blockX);
+							double blockHeight = std::abs((linePreviousYmin + linePreviousHeight) - blockY);
+
+							sprintf(tmp, ATTR_NUMFORMAT, blockHeight);
+							xmlNewProp(nodeblocks, (const xmlChar*)ATTR_HEIGHT, (const xmlChar*)tmp);
+							sprintf(tmp, ATTR_NUMFORMAT, blockWidth);
+							xmlNewProp(nodeblocks, (const xmlChar*)ATTR_WIDTH, (const xmlChar*)tmp);
+
+							// adding previous block to the page element
+							if (readingOrder)
+								lastBlockInserted = addBlockChildReadingOrder(nodeblocks, lastBlockInserted);
+							else
+								xmlAddChild(page, nodeblocks);
+						}
+
+						nodeblocks = xmlNewNode(NULL, (const xmlChar*)TAG_BLOCK);
 						nodeblocks->type = XML_ELEMENT_NODE;
-						xmlAddChild(page, nodeblocks);
+						// PL: block is added when finished
+						//xmlAddChild(page, nodeblocks);
 						id = new GString("p");
 						xmlNewProp(nodeblocks, (const xmlChar*)ATTR_ID,
 								(const xmlChar*)buildIdBlock(num, numBlock, id)->getCString());
 						delete id;
+
+						// PL: new block X and Y
+						if (lineX != 0) {
+							sprintf(tmp, ATTR_NUMFORMAT, lineX);
+							xmlNewProp(nodeblocks, (const xmlChar*)ATTR_X, (const xmlChar*)tmp);
+						}
+						if (lineYmin != 0) {
+							sprintf(tmp, ATTR_NUMFORMAT, lineYmin);
+							xmlNewProp(nodeblocks, (const xmlChar*)ATTR_Y, (const xmlChar*)tmp);
+						}
+
 						numBlock = numBlock + 1;
 						xmlAddChild(nodeblocks, nodeline);
 					}
@@ -2132,6 +2346,14 @@ void TextPage::dump(GBool blocks, GBool fullFontName) {
 			}
 			if (endPage) {
 				endPage = gFalse;
+
+				if (nodeblocks) {
+					if (readingOrder)
+						addBlockChildReadingOrder(nodeblocks, lastBlockInserted);
+					else
+						xmlAddChild(page, nodeblocks);
+					lastBlockInserted = gFalse;
+				}
 			}
 
 			// We save informations about the future previous line
@@ -2147,12 +2369,129 @@ void TextPage::dump(GBool blocks, GBool fullFontName) {
 		}
 	} // end FOR
 
-
 	free(tmp);
-	delete word;
+	delete word; 
 	uMap->decRefCnt();
+}
 
+// PL: Insert a block in the page's block list according to the reading order
+GBool TextPage::addBlockChildReadingOrder(xmlNodePtr nodeblock, GBool lastInserted) {
 
+	// if Y_pos of the block to be inserted is less than Y_pos of the existing block
+	// (i.e. block is located above)
+	// and, in case of vertical overlap, 
+	//		X_pos + width of the block to be inserted is less than X_pos of this existing block
+	// (i.e. block is on the left and the surfaces of the block are not overlaping - 
+	// 2 columns case) 
+ 	// then the block order is before the existing block
+
+ 	xmlNode *cur_node = NULL;
+ 	GBool notInserted = gTrue;
+	// we get the first child of the current page node
+	unsigned long nbChildren = xmlChildElementCount(page);
+	if (nbChildren > 0) {
+		xmlNodePtr previousPageItem = NULL;
+
+		// coordinates of the block to be inserted
+		double blockX = 0;
+		xmlChar *attrValue = xmlGetProp(nodeblock, (const xmlChar*)ATTR_X);
+		if (attrValue != NULL) {
+			blockX = atof((const char*)attrValue);
+			xmlFree(attrValue);
+		}
+
+		double blockY = 0;
+		attrValue = xmlGetProp(nodeblock, (const xmlChar*)ATTR_Y);
+		if (attrValue != NULL) {
+			blockY = atof((const char*)attrValue);
+			xmlFree(attrValue);
+		}
+
+		double blockHeight = 0;
+		attrValue = xmlGetProp(nodeblock, (const xmlChar*)ATTR_HEIGHT);
+		if (attrValue != NULL) {
+			blockHeight = atof((const char*)attrValue);
+			xmlFree(attrValue);
+		}
+
+		double blockWidth = 0;
+		attrValue = xmlGetProp(nodeblock, (const xmlChar*)ATTR_WIDTH);
+		if (attrValue != NULL) {
+			// set the width attribute
+			blockWidth = atof((const char*)attrValue);
+			xmlFree(attrValue);
+		}
+
+//cout << "to be inserted: " << nodeblock->name << ", X: " << blockX << ", Y: " << blockY << ", H: " << blockHeight << ", W: " << blockWidth << endl;
+		
+		xmlNodePtr firstPageItem = xmlFirstElementChild(page);
+		// we get all the block nodes in the XML tree corresponding to the page
+		for (cur_node = firstPageItem; cur_node && notInserted; cur_node = cur_node->next) {
+        	if ( (cur_node->type == XML_ELEMENT_NODE) && (strcmp((const char*)cur_node->name, TAG_BLOCK) ==0) ) {
+        		//cout << "node type: Element, name: " << cur_node->name << endl;
+        		
+        		double currentY = 0;
+				attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_Y);
+				if (attrValue != NULL) {
+					currentY = atof((const char*)attrValue);
+					xmlFree(attrValue);
+				}
+
+				if (currentY < blockY)
+					continue;
+
+				double currentX = 0;
+				attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_X);
+				if (attrValue != NULL) {
+					currentX = atof((const char*)attrValue);
+					xmlFree(attrValue);
+				}
+
+				double currentWidth = 0;
+				attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_WIDTH);
+				if (attrValue != NULL) {
+					currentWidth = atof((const char*)attrValue);
+					xmlFree(attrValue);
+				}
+
+				if (blockY < currentY) {
+					if (blockY + blockHeight < currentY) {
+						// we don't have any vertical overlap
+						// check the X-pos, the block cannot be on the right of the current block 
+						if ( (blockX < currentX + currentWidth) || lastInserted) {
+							// we can insert the block before the current block
+							xmlNodePtr result = xmlAddPrevSibling(cur_node, nodeblock);
+							notInserted = false;
+						}
+					}
+
+					// we have vertical overlap, check position on X axis
+
+					/*double currentHeight = 0;
+					attrValue = xmlGetProp(cur_node, (const xmlChar*)ATTR_HEIGHT);
+					if (attrValue != NULL) {
+						currentHeight = atof((const char*)attrValue);
+						xmlFree(attrValue);
+					}*/	
+				}
+				/*if (notInserted && (blockX + blockWidth < currentX)) {
+					// does not work for multi column sections one after the other
+					xmlNodePtr result = xmlAddPrevSibling(cur_node, nodeblock);
+					notInserted = false;
+				}*/
+			}
+		}
+	}
+	
+	if (notInserted) {
+		xmlAddChild(page, nodeblock);
+//cout << "append" << endl;
+		return gFalse;
+	}
+	else {
+//cout << "prev inserted" << endl;
+		return gTrue;
+	}
 }
 
 void TextPage::addImageInlineNode(xmlNodePtr nodeline,
