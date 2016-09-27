@@ -2,9 +2,9 @@
 set DIRSRC=.\src
 set DIREXE=.\exe
 
-set DIRXPDF= ..\pdf2xml\xpdf_3.01\xpdf
-set DIRGOO=..\pdf2xml\xpdf_3.01\goo
-set DIRFOFI=..\pdf2xml\xpdf_3.01\fofi
+set DIRXPDF= ..\pdf2xml\xpdf_3.04\xpdf
+set DIRGOO=..\pdf2xml\xpdf_3.04\goo
+set DIRFOFI=..\pdf2xml\xpdf_3.04\fofi
 set DIRLIBXML=..\pdf2xml\libxml2-2.6.19+.win32
 set DIRICONV=..\pdf2xml\iconv-1.9.1.win32
 set CC=c:\mingw\bin\gcc.exe
@@ -13,7 +13,7 @@ set CXX=c:\mingw\bin\g++.exe
 set CXXFLAGS=%CFLAGS%
 set LIBPROG=c:\mingw\bin\ar.exe
 
-copy ..\pdf2xml\xpdf_3.01\aconf-dj.h %DIRSRC%\aconf.h
+copy ..\pdf2xml\xpdf_3.04\aconf-dj.h %DIRSRC%\aconf.h
 
 %CXX% %CXXFLAGS% -I%DIRXPDF% -I%DIRLIBXML%\include -I%DIRICONV%\include -c %DIRSRC%\ConstantsUtils.cc
 %CXX% %CXXFLAGS% -I%DIRXPDF% -I%DIRLIBXML%\include -I%DIRICONV%\include -c %DIRSRC%\ConstantsXML.cc

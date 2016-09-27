@@ -11,7 +11,7 @@
 
 
 #XPDF = ../xpdf-3.02-64
-XPDF = ../xpdf-3.03
+XPDF = ../xpdf/xpdf-3.04
 DIRPNG= ./image/png
 DIRZLIB= ./image/zlib
 
