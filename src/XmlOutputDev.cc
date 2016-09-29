@@ -2458,7 +2458,9 @@ GBool TextPage::addBlockChildReadingOrder(xmlNodePtr nodeblock, GBool lastInsert
 					if (blockY + blockHeight < currentY) {
 						// we don't have any vertical overlap
 						// check the X-pos, the block cannot be on the right of the current block 
-						if ( (blockX < currentX + currentWidth) || lastInserted) {
+						if ( (blockX < currentX + currentWidth) || 
+								( (blockX + blockWidth > currentX + currentWidth) && (blockX + blockWidth > currentX) ) || 
+								lastInserted) {
 							// we can insert the block before the current block
 							xmlNodePtr result = xmlAddPrevSibling(cur_node, nodeblock);
 							notInserted = false;
