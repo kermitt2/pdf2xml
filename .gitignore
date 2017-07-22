@@ -6,3 +6,5 @@
 *.dylib
 *.la
 *.exe
+.idea
+.iml

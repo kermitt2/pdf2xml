@@ -1,0 +1,10 @@
+# environment configuration
+image: Visual Studio 2015
+
+
+
+# Build
+platform:
+  - x86
+  - x64
+   
