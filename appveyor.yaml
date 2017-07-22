@@ -1,10 +1,14 @@
 # environment configuration
-image: Visual Studio 2015
-
+image:
+  - mingw_32
 
 
 # Build
 platform:
   - x86
   - x64
+
+
+build_script:
+- make.bat
    
