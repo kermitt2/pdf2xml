@@ -10,7 +10,7 @@ set DIRZLIB=.\image\zlib
 
 set DIRXPDF=%XPDF%\xpdf
 set DIRGOO=%XPDF%\goo
-set DIRFOFI=.%XPDF%\fofi
+set DIRFOFI=%XPDF%\fofi
 set CC=c:\mingw\bin\gcc.exe
 set CFLAGS=-g -O2 -I %DIRSRC% -I %DIRFOFI% -I %DIRGOO%
 set CXX=c:\mingw\bin\g++.exe
@@ -29,5 +29,5 @@ copy %XPDF%\aconf-dj.h %DIRSRC%\aconf.h
 REM del %DIRSRC%\libsrc.a
 %LIBPROG% -rc %DIRSRC%\libsrc.a *.o
 
-%CXX% %CXXFLAGS% -o %DIREXE%\pdftoxml.exe %DIRSRC%\pdftoxml.cc -I.\image\png -I.\image\zlib\ -I%DIRXPDF% -I%DIRLIBXML%\include -I%DIRICONV%\include %DIRLIBXML%\bin\libxml2.dll %DIRSRC%\libsrc.a %DIRXPDF%\libxpdf.a %DIRFOFI%\libfofi.a %DIRGOO%\libGoo.a .\image\png\libpng.a
+%CXX% %CXXFLAGS% -o %DIREXE%\pdftoxml.exe %DIRSRC%\pdftoxml.cc -I.\image\png -I.\image\zlib\ -I%DIRXPDF% -I%DIRLIBXML%\include -I%DIRICONV%\include %DIRLIBXML%\bin\libxml2.dll %DIRSRC%\libsrc.a %DIRXPDF%\libxpdf.a %DIRFOFI%\libfofi.a %DIRGOO%\libGoo.a .\image\png\libpng.a .\image\zlib\zlib.a
 
