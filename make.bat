@@ -5,7 +5,7 @@ set DIREXE=.\exe
 set XPDF=..\xpdf-3.04
 REM set DIRLIBXML=..\libxml2-2.7.6.win32
 set DIRLIBXML=..\libxml2-2.7.8.win32
-set DIRICONV=..\libiconv-1.15
+set DIRICONV=..\libiconv-1.9.1
 set DIRPNG=.\image\png
 set DIRZLIB=.\image\zlib
 
@@ -17,7 +17,7 @@ set CFLAGS=/O2 /I%DIRSRC% /I%DIRFOFI% /I%DIRGOO% /DHAVE_CONFIG_H
 
 set CXX=cl.exe
 set CXXFLAGS=%CFLAGS% /DHAVE_CONFIG_H
-set LIBPROG=ar.exe
+set LIBPROG=lib
 
 %CXX% %CXXFLAGS% /I%DIRXPDF% /I%DIRLIBXML%\include /I%DIRICONV%\include -c %DIRSRC%\ConstantsUtils.cc
 %CXX% %CXXFLAGS% /I%DIRXPDF% /I%DIRLIBXML%\include /I%DIRICONV%\include -c %DIRSRC%\ConstantsXML.cc
@@ -26,12 +26,12 @@ set LIBPROG=ar.exe
 %CXX% %CXXFLAGS% /I%XPDF% /I%DIRXPDF% /I%DIRLIBXML%\include /I%DIRICONV%\include -c %DIRSRC%\PDFDocXrce.cc
 %CXX% %CXXFLAGS% /EHsc /I%XPDF% /I%DIRXPDF% /I%XPDF% /I%DIRPNG%  /I%DIRZLIB% /I%DIRLIBXML%\include /I%DIRICONV%\include -c %DIRSRC%\XmlOutputdev.cc
 
-del %DIRSRC%\libsrc.a
-%LIBPROG% -rc %DIRSRC%\libsrc.a *.obj
+del %DIRSRC%\libsrc.lib
+%LIBPROG% /OUT:%DIRSRC%\libsrc.lib *.obj
 
 del *.obj
 
 REM %CXX% %CXXFLAGS% -o %DIREXE%\pdftoxml.exe %DIRSRC%\pdftoxml.cc /EHsc /I..\dirent\include /I%DIRPNG%  /I%DIRZLIB% /I%DIRXPDF% /I%XPDF% /I%DIRLIBXML%\include /I%DIRICONV%\include %DIRLIBXML%\bin\libxml2.dll %DIRSRC%\libsrc.a %DIRXPDF%\libxpdf.a %DIRFOFI%\libfofi.a %DIRGOO%\libGoo.a %DIRPNG%\libpng.a 
 
 
-%CXX% %CXXFLAGS% -o %DIREXE%\pdftoxml.exe %DIRSRC%\pdftoxml.cc /EHsc /I..\dirent\include /I%DIRPNG%  /I%DIRZLIB% /I%DIRXPDF% /I%XPDF% /I%DIRLIBXML%\include /I%DIRICONV%\include /link %DIRLIBXML%\bin\libxml2.dll %DIRSRC%\libsrc.a %DIRXPDF%\libxpdf.a %DIRFOFI%\libfofi.a %DIRGOO%\libGoo.a %DIRPNG%\libpng.a
+%CXX% %CXXFLAGS% -o %DIREXE%\pdftoxml.exe %DIRSRC%\pdftoxml.cc /EHsc /I..\dirent\include /I%DIRPNG%  /I%DIRZLIB% /I%DIRXPDF% /I%XPDF% /I%DIRLIBXML%\include /I%DIRICONV%\include %DIRLIBXML%\lib\libxml2.lib %DIRSRC%\libsrc.lib %DIRXPDF%\libxpdf.lib %DIRFOFI%\fofi.lib %DIRGOO%\Goo.lib %DIRPNG%\libpng.lib

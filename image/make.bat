@@ -1,9 +1,9 @@
 
-set DIRPNG= .\png
-set DIRZLIB= .\zlib
+set DIRPNG=.\png
+set DIRZLIB=.\zlib
 set CC=cl.exe
 set CFLAGS= /I %DIRZLIB%
-set LIBPROG=ar.exe
+set LIBPROG=lib
 
 
 %CC% %CFLAGS%  -c %DIRZLIB%\adler32.c
@@ -19,8 +19,8 @@ set LIBPROG=ar.exe
 %CC% %CFLAGS%  -c %DIRZLIB%\uncompr.c
 %CC% %CFLAGS%  -c %DIRZLIB%\zutil.c
 
-del %DIRZLIB%\zlib.a
-%LIBPROG% -rc %DIRZLIB%\zlib.a *.obj
+del %DIRZLIB%\zlib.lib
+%LIBPROG% /OUT:%DIRZLIB%\zlib.lib *.obj
 
 %CC% %CFLAGS%  -c %DIRPNG%\png.c
 %CC% %CFLAGS%  -c %DIRPNG%\pngerror.c
@@ -40,6 +40,6 @@ del %DIRZLIB%\zlib.a
 %CC% %CFLAGS%  -c %DIRPNG%\pngwutil.c
 
 
-del %DIRPNG%\libpng.a
-%LIBPROG% -rc %DIRPNG%\libpng.a *.obj
+del %DIRPNG%\libpng.lib
+%LIBPROG% /OUT:%DIRPNG%\libpng.lib *.obj
 
