@@ -2,7 +2,7 @@
 set DIRPNG= .\png
 set DIRZLIB= .\zlib
 set CC=cl.exe
-set CFLAGS= /I .\zlib
+set CFLAGS= /I %DIRZLIB%
 set LIBPROG=ar.exe
 
 
