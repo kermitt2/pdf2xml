@@ -8,9 +8,9 @@ set DIRLIBXML=..\libxml2-2.7.8.win32
 set DIRICONV=..\libiconv-1.9.1
 
 set DIRXPDF_ROOT=..\xpdf-3.04
-set DIRXPDF=%XPDF%\xpdf
-set DIRGOO=%XPDF%\goo
-set DIRFOFI=%XPDF%\fofi
+set DIRXPDF=%DIRXPDF_ROOT%\xpdf
+set DIRGOO=%DIRXPDF_ROOT%\goo
+set DIRFOFI=%DIRXPDF_ROOT%\fofi
 
 set CC=vc.exe
 set CFLAGS=/O2 /I%DIRSRC% /I%DIRFOFI% /I%DIRGOO% /DHAVE_CONFIG_H
