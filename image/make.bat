@@ -3,7 +3,7 @@ set DIRPNG=.\png
 set DIRZLIB=.\zlib
 set CC=cl.exe
 set CFLAGS= /I %DIRZLIB%
-set LIBPROG=lib
+set LIBPROG=lib.exe
 
 
 %CC% %CFLAGS%  -c %DIRZLIB%\adler32.c

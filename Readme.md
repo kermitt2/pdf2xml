@@ -1,6 +1,6 @@
 ## pdf2xml
 
-This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hervé Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
+This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hervï¿½ Dï¿½jean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
 This following modifications have been made:
 
@@ -20,18 +20,20 @@ From our experiments, the raw order can diverge quite significantly from the ord
 
 See the file INSTALL for more details. 
 
+### Linux
+
 * Install libxml2 (Should be already installed on your linux distribution). See http://xmlsoft.org/  
-
-* Compile the zlib and png libraries, under subdirectory /images: 
-
-> make -f <MAKEFILE>
-(MAKEFILE being make.bat or make.linux64)
 
 * Install xpdf. See http://www.foolabs.com/xpdf/
 
 * create libxpdf.a  in xpdf-XX/xpdf/    with 
 
 > ar -rc libxpdf.a *.o
+
+* Compile the zlib and png libraries, under subdirectory /images: 
+
+> make -f <MAKEFILE>
+(MAKEFILE being make.bat or make.linux64)
 
 * Update Makefile.linux (paths to xpdf) 
 
@@ -46,10 +48,49 @@ Use Makefile.linux64 for last version on Linux 64bits
 This should build the executable:
 
     exe/pdftoxml.exe
+    
+### Windows 
+
+This guide compile pdf2xml using the native libraries of windows:  
+
+* Install the Visual Studio Community edition and the tools to build C/C++ applications under windows. 
+To verify make sure the command `cl.exe`, `ar.exe` and `lib.exe` are found.   
+
+* Download iconv from https://sourceforge.net/projects/gettext/files/libiconv-win32/1.9.1/
+
+* Download libxml2 fromï»¿ftp://xmlsoft.org/libxml2/win32/
+
+* Download the library dirent fromï»¿https://github.com/tronkko/dirent
+
+* iconv, libxml2 and dirent root dirs should be at the same level of pdf2xml's sources: 
+
+```bash
+drwxr-xr-x 1 lfoppiano 197121 0 lug 28 17:41 dirent/
+drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:51 grobid/
+drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:38 libiconv-1.9.1/
+drwxr-xr-x 1 lfoppiano 197121 0 lug 30 20:02 libxml2-2.7.8.win32/
+drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:44 pdf2xml/ (<- pdf2xml source)
+drwxr-xr-x 1 lfoppiano 197121 0 lug 28 09:06 xpdf-3.04/
+```
+
+* Install xpdf from http://www.foolabs.com/xpdf/. 
+
+* Build xpdf using the windows ms_make.bat.  
+
+* create libxpdf.a  in xpdf-XX/xpdf/ with 
+
+> lib /out:libxpdf.lib *.obj
+
+* Compile the zlib and png libraries, under the /images subdirectory in pdf2xml source: 
+
+> make.bat
+
 
 ## Contributor
 
-This version has been modified by Patrice Lopez (patrice.lopez@science-miner.com). 
+This version has been modified by Patrice Lopez (patrice.lopez@science-miner.com).
+The first windows version (1.0.0) has been built by @pboumenot and ported on windows 7 for 64 bit. 
+The version 2.0.0 for windows was built by @lfoppiano with huge help from @flydutch.  
 
 ## License
 
@@ -127,7 +168,7 @@ See the separate file, INSTALL.
 Contributors
 ----
 
-Hervé Déjean   (src) 
+Hervï¿½ Dï¿½jean   (src) 
 Sophie Andrieu (src)
 Jean-Yves Vion-Dury (schemas)
 
