@@ -26,11 +26,11 @@ See the file INSTALL for more details.
 
 * Install xpdf. See http://www.foolabs.com/xpdf/
 
-* create libxpdf.a  in xpdf-XX/xpdf/    with 
+* create `libxpdf.a` in `xpdf-XX/xpdf/` with 
 
 > ar -rc libxpdf.a *.o
 
-* Compile the zlib and png libraries, under subdirectory /images: 
+* Compile the zlib and png libraries, under subdirectory `/images`: 
 
 > make -f <MAKEFILE>
 (MAKEFILE being make.bat or make.linux64)
@@ -54,13 +54,13 @@ This should build the executable:
 This guide compile pdf2xml using the native libraries of windows:  
 
 * Install the Visual Studio Community edition and the tools to build C/C++ applications under windows. 
-To verify make sure the command `cl.exe`, `ar.exe` and `lib.exe` are found.   
+To verify make sure the command `cl.exe` and `lib.exe` are found.   
 
-* Download iconv from https://sourceforge.net/projects/gettext/files/libiconv-win32/1.9.1/
+* Download iconv from  https://sourceforge.net/projects/gettext/files/libiconv-win32/1.9.1/
 
-* Download libxml2 from﻿ftp://xmlsoft.org/libxml2/win32/
+* Download libxml2 from﻿ ftp://xmlsoft.org/libxml2/win32/
 
-* Download the library dirent from﻿https://github.com/tronkko/dirent
+* Download the library dirent from﻿ https://github.com/tronkko/dirent
 
 * iconv, libxml2 and dirent root dirs should be at the same level of pdf2xml's sources: 
 
@@ -73,11 +73,11 @@ drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:44 pdf2xml/ (<- pdf2xml source)
 drwxr-xr-x 1 lfoppiano 197121 0 lug 28 09:06 xpdf-3.04/
 ```
 
-* Install xpdf from http://www.foolabs.com/xpdf/. 
+* Install xpdf from  http://www.foolabs.com/xpdf/. 
 
 * Build xpdf using the windows ms_make.bat.  
 
-* create libxpdf.a  in xpdf-XX/xpdf/ with 
+* create `libxpdf.a` in `xpdf-XX/xpdf/` with 
 
 > lib /out:libxpdf.lib *.obj
 
