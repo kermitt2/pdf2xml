@@ -6,9 +6,6 @@
 # Xerox Research Centre Europe
 # cpy XRCE 2007
 #
-# Instructions: 
-# 1. build XPDF and generate the .a
-# 2. build 
 #========================================================================
     
 XPDF = ../xpdf-3.04

@@ -1,14 +1,14 @@
 ## pdf2xml
 
-This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Herv� D�jean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
+This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hérve Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
 This following modifications have been made:
 
-- encode URI (using ```xmlURIEscape``` from libxml2) for the @href attribute content to avoid blocking XML wellformedness issues. From our experiments, this problem happens in average for 2-3 scholar PDF out of one thousand.
+- encode URI (using `xmlURIEscape` from libxml2) for the @href attribute content to avoid blocking XML wellformedness issues. From our experiments, this problem happens in average for 2-3 scholar PDF out of one thousand.
 
-- output coordinates attributes for the BLOCK elements when the ```-block``` option is selected,
+- output coordinates attributes for the BLOCK elements when the `-block` option is selected,
 
-- add a parameter ```-readingOrder``` which re-order the blocks following the reading order when the -block option is selected. By default in pdf2xml, the elements follow the PDF content stream (the so-called _raw order_). In pdf2txt from xpdf, several text flow orders are available including the raw order and the reading order. Note that, with this modification and this new option, only the blocks are re-ordered.
+- add a parameter `-readingOrder` which re-order the blocks following the reading order when the -block option is selected. By default in pdf2xml, the elements follow the PDF content stream (the so-called _raw order_). In pdf2txt from xpdf, several text flow orders are available including the raw order and the reading order. Note that, with this modification and this new option, only the blocks are re-ordered.
 
 From our experiments, the raw order can diverge quite significantly from the order of elements according to the visual/reading layout in 2-4% of scholar PDF (e.g. title element is introduced at the end of the page element, while visually present at the top of the page), and minor changes can be present in up to 100% of PDF for some scientific publishers (e.g. headnote introduced at the end of the page content). This additional mode can be thus quite useful for information/structure extraction applications exploiting pdf2xml output. 
 
@@ -22,11 +22,19 @@ See the file INSTALL for more details.
 
 ### Linux
 
-* Install libxml2 (Should be already installed on your linux distribution). See http://xmlsoft.org/  
+* Install libxml2 (development headers). See http://xmlsoft.org/  
 
-* Install xpdf. See http://www.foolabs.com/xpdf/
+* Download xpdf. See http://www.foolabs.com/xpdf/
 
-* create `libxpdf.a` in `xpdf-XX/xpdf/` with 
+* The makefile has been adapted to work with the following directory format
+(iconv, libxml2 and dirent root dirs should be at the same level of pdf2xml's sources):  
+
+```bash
+drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:44 pdf2xml/ (<- pdf2xml source)
+drwxr-xr-x 1 lfoppiano 197121 0 lug 28 09:06 xpdf-3.04/
+```
+
+* Compile xpdf (see the file INSTALL in their source directory), then create `libxpdf.a` in `xpdf-XX/xpdf/` with 
 
 > ar -rc libxpdf.a *.o
 
@@ -62,18 +70,18 @@ To verify make sure the command `cl.exe` and `lib.exe` are found.
 
 * Download the library dirent from﻿ https://github.com/tronkko/dirent
 
-* iconv, libxml2 and dirent root dirs should be at the same level of pdf2xml's sources: 
+* Download xpdf from  http://www.foolabs.com/xpdf/
+
+* The makefile has been adapted to work with the following directory format
+(iconv, libxml2 and dirent root dirs should be at the same level of pdf2xml's sources):  
 
 ```bash
 drwxr-xr-x 1 lfoppiano 197121 0 lug 28 17:41 dirent/
-drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:51 grobid/
 drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:38 libiconv-1.9.1/
 drwxr-xr-x 1 lfoppiano 197121 0 lug 30 20:02 libxml2-2.7.8.win32/
 drwxr-xr-x 1 lfoppiano 197121 0 ago  1 10:44 pdf2xml/ (<- pdf2xml source)
 drwxr-xr-x 1 lfoppiano 197121 0 lug 28 09:06 xpdf-3.04/
-```
-
-* Install xpdf from  http://www.foolabs.com/xpdf/. 
+``` 
 
 * Build xpdf using the windows ms_make.bat.  
 
@@ -98,7 +106,6 @@ As the original pdf2xml, GPL2.
 
 
 ## Original readme 
-====
 ====
 
 pdftoxml
@@ -168,7 +175,7 @@ See the separate file, INSTALL.
 Contributors
 ----
 
-Herv� D�jean   (src) 
+Hervé Déjean   (src) 
 Sophie Andrieu (src)
 Jean-Yves Vion-Dury (schemas)
 
