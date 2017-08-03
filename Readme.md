@@ -2,6 +2,7 @@
 
 This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hérve Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
+#### version 2.0 
 This following modifications have been made:
 
 - encode URI (using `xmlURIEscape` from libxml2) for the @href attribute content to avoid blocking XML wellformedness issues. From our experiments, this problem happens in average for 2-3 scholar PDF out of one thousand.
