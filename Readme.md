@@ -103,9 +103,9 @@ drwxr-xr-x 1 lfoppiano 197121 0 lug 28 09:06 xpdf-3.04/
 
 This pdf2xml version has been modified by Patrice Lopez (patrice.lopez@science-miner.com).
 
-The first windows version (1.0.0) has been built by @pboumenot and ported on windows 7 for 64 bit. 
+The first windows version (1.0.0) has been built by [@pboumenot](https://github.com/boumenot) and ported on windows 7 for 64 bit. 
 
-The version 2.0 for windows (native and cygwin) was built by @lfoppiano and @flydutch.  
+The version 2.0 for windows (native and cygwin) was built by [@lfoppiano](https://github.com/boumenot) and [@flydutch](https://github.com/flydutch).  
 
 ## License
 
