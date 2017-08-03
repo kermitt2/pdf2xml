@@ -8,12 +8,7 @@
 #
 #========================================================================
 
-
-
-#XPDF = ../xpdf-3.02-64
-XPDF = ../xpdf/xpdf-3.04
-DIRPNG= ./image/png
-DIRZLIB= ./image/zlib
+XPDF = ../xpdf-3.04
 
 CC=gcc
 #CFLAGS=-Wall  -I$(XPDF) -I/usr/include/glib-2.0 -I/usr/lib6Yp4-I/usr/lib64/glib-2.0/include 
@@ -26,13 +21,13 @@ CXXFLAGSFOFI=-I$(XPDF)/fofi
 LIBPROG=ar
 DEL = rm 
 
-
 # Directories
 DIRXPDF=$(XPDF)/xpdf
 DIRGOO=$(XPDF)/goo
 DIRPNG=./image/png
 DIRZLIB=./image/zlib
 DIRFOFI=$(XPDF)/fofi
+
 DIRSRC=src
 DIREXE=exe
 

@@ -1,4 +1,5 @@
 *.o
+*.obj
 *.a
 *.lo
 *.so
@@ -6,3 +7,5 @@
 *.dylib
 *.la
 *.exe
+.idea
+.iml

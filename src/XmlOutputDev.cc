@@ -28,6 +28,7 @@
 #include <list>
 #include <vector>
 #include <stack>
+#define _USE_MATH_DEFINES
 #include <cmath> // PL: for using std::abs
 
 #include <iostream>
@@ -4433,7 +4434,7 @@ void XmlOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 		if (index == -1)
 		{
 			//HD : in order to avoid millions of small (pixel) images
-					if (height > 8 and width > 8 and imageIndex <1000){
+					if (height > 8 && width > 8 && imageIndex <1000){
 						imageIndex+=1;
 						// Save this in the references
 			//			text->drawImage(state, ref, str, width, height, colorMap, maskColors,inlineImg, dumpJPEG, imageIndex);
@@ -4446,7 +4447,7 @@ void XmlOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
 		}
 		else{
 			//HD : in order to avoid millions of small (pixel) images
-			if (height > 8 and width > 8 and imageIndex <1000){
+			if (height > 8 && width > 8 && imageIndex <1000){
 	//			text->drawImage(state, ref, str, width, height, colorMap, maskColors,inlineImg, dumpJPEG, imageIndex);
 				ext= text->drawImageOrMask(state, ref, str, width, height, colorMap, maskColors, inlineImg, false,index); // not a mask
 
@@ -4515,7 +4516,7 @@ void XmlOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 	{
 		if (parameters->getDisplayImage()) {
 				//HD : in order to avoid millions of small (pixel) images
-				if (height>8 and width > 8  and imageIndex<1000){
+				if (height>8 && width > 8 && imageIndex<1000){
 					imageIndex +=1;
 					// Save this in the references
 					ext= text->drawImageOrMask(state, ref, str, width, height, NULL, NULL, inlineImg, true,imageIndex); // mask
@@ -4528,7 +4529,7 @@ void XmlOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 	else{
 		if (parameters->getDisplayImage()) {
 			//HD : in order to avoid millions of small (pixel) images
-			if (height>8 and width > 8  and imageIndex<1000){
+			if (height>8 && width > 8  && imageIndex<1000){
 				//use reference instead
 				ext= text->drawImageOrMask(state, ref, str, width, height, NULL, NULL, inlineImg, true,index); // mask
 	//			text->drawImageMask(state, ref, str, width, height, invert, inlineImg,
