@@ -59,7 +59,12 @@ This should build the executable:
     
 ### Windows 
 
-This guide compile pdf2xml using the native libraries of windows:  
+*NOTE: this version seems to have some problems with certain pdf, we 
+recommend you to use the version built using cygwin (same process as Linux).
+
+If you feel like discovering the issue, we would much appreciate it ;-)*
+ 
+This guide compile pdf2xml using the native libraries of Windows:  
 
 * Install the Visual Studio Community edition and the tools to build C/C++ applications under windows. 
 To verify make sure the command `cl.exe` and `lib.exe` are found.   
@@ -96,9 +101,11 @@ drwxr-xr-x 1 lfoppiano 197121 0 lug 28 09:06 xpdf-3.04/
 
 ## Contributor
 
-This version has been modified by Patrice Lopez (patrice.lopez@science-miner.com).
+This pdf2xml version has been modified by Patrice Lopez (patrice.lopez@science-miner.com).
+
 The first windows version (1.0.0) has been built by @pboumenot and ported on windows 7 for 64 bit. 
-The version 2.0.0 for windows was built by @lfoppiano with huge help from @flydutch.  
+
+The version 2.0 for windows (native and cygwin) was built by @lfoppiano and @flydutch.  
 
 ## License
 
