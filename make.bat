@@ -1,3 +1,4 @@
+REM Makefile for Windows native installation
 
 set DIRSRC=.\src
 set DIREXE=.\exe

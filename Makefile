@@ -1,6 +1,6 @@
 #========================================================================
 #
-# pdftoxml Makefile using CGWIN
+# pdftoxml Makefile using CGWIN or MAC (never tested)
 #
 # author: Sophie Andrieu, Herve Dejean
 # Xerox Research Centre Europe
@@ -10,24 +10,25 @@
     
 XPDF = ../xpdf-3.04
 
-DIREXE=./exe
 CC=gcc
 CFLAGS=-Wall -g -O2 -DHAVE_CONFIG_H -I$(XPDF)
 CXX=g++
 CXXFLAGS=$(CFLAGS)
 CXXFLAGSGOO=-I$(XPDF)/goo
-CXXFLAGSFOFI=-I$(XPDF)/fofim
+CXXFLAGSFOFI=-I$(XPDF)/fofi
 LIBPROG=ar
+DEL = rm
+
 
 # Directories
+DIRXPDF=$(XPDF)/xpdf
 DIRGOO=$(XPDF)/goo
 DIRFOFI=$(XPDF)/fofi
-DIRXPDF=$(XPDF)/xpdf
 DIRSRC=src
-DIREXE=exe
-#DIRLIBXML=../libxml2-2.7.6.win32/include
+DIREXE=./exe
+
 DIRLIBXML=/usr/include/libxml2
-ICONVSRC=../libiconv-1.15/include
+#ICONVSRC=../libiconv-1.15/include
 
 # Executable name
 PDFTOXMLEXE=pdftoxml.exe
@@ -53,7 +54,7 @@ pdftoxmlEXE: compile.src
 
 # Clean target to delete all .o files, .a files library and .exe files
 clean:
-	rm -f $(DIRSRC)\*.o
-	rm -f $(DIRSRC)\libsrc.a
-	rm -f $(DIREXE)\*.exe
+	$(DEL) $(DIRSRC)/*.o
+	$(DEL) $(DIRSRC)/libsrc.a
+	$(DEL) $(DIREXE)/*.exe
 
