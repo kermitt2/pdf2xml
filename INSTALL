@@ -1,7 +1,7 @@
 pdftoxml
 ====
 
-version 1.0.0
+version 2.0.0
 2007-jul-12
 
 The Xpdf software and documentation are
@@ -30,27 +30,17 @@ different systems.
         |- zlib 
         |- exe
         |- src
-        |- xpdf-3.XX
+        |- xpdf
             |- fofi
             |- goo
             |- splash
             |- xpdf
 
-        Makefile.linux
+        CMakeLists.txt
         
 
-* Install libxml2 (Should be already installed on your linux distribution). See http://xmlsoft.org/  
-* compile the zlib and png libraries (make.bat or make.linux64)
-* Install xpdf. See http://www.foolabs.com/xpdf/
-* create libxpdf.a  in xpdf-XX/xpdf/    with ar -rc libxpdf.a *.o
-* Update Makefile.linux (paths to xpdf) 
-
-
-Use Makefile.linux64 for last version on Linux 64bits
-* Type 'make -f <MAKEFILENAME>'.  This should build the executable:
-
-    exe/pdftoxml.exe
-
+* Install libxml2 (Should be already installed on your linux distribution). See http://xmlsoft.org/
+* Install libmotif
 
 
 ***************
@@ -76,16 +66,13 @@ Installation has been done using the above project organization:
 
             |- lib
 
-        |- xpdf_3.01
-
+        |- xpdf
             |- fofi
             |- goo
             |- splash
             |- xpdf
 
-        Makefile
-        
-* Install xpdf: See http://www.foolabs.com/xpdf/
+        CMakeLists.txt
 
 With cygwin, the  procedure is(should be!) the same as for Unix
 
