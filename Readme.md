@@ -1,6 +1,6 @@
 ## pdf2xml
 
-This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hérve Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
+This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hervé Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
 #### version 2.0 
 This following modifications have been made:
