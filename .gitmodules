@@ -1,0 +1,3 @@
+[submodule "xpdf"]
+	path = xpdf
+	url = https://github.com/aoboturov/xpdf
