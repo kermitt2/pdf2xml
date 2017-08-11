@@ -2,8 +2,14 @@
 
 This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hervé Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
-#### version 2.1 (development)
+### version 2.1 (development)
 - Adding CMake Build
+
+- more to come!
+
+### Compilation
+
+See the file INSTALL for more details. 
 
 ### Linux
 
@@ -26,7 +32,7 @@ This is a modified version of pdf2xml available at http://sourceforge.net/projec
 See `Compilation` for version 2.0 (at the moment nothing has changed)
 
 
-#### version 2.0 
+## version 2.0 (stable)
 This following modifications have been made:
 
 - encode URI (using `xmlURIEscape` from libxml2) for the @href attribute content to avoid blocking XML wellformedness issues. From our experiments, this problem happens in average for 2-3 scholar PDF out of one thousand.
@@ -39,9 +45,7 @@ From our experiments, the raw order can diverge quite significantly from the ord
 
 - use the latest version of xpdf, version 3.04.
 
-- more to come!
-
-## Compilation
+### Compilation
 
 See the file INSTALL for more details. 
 
