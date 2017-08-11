@@ -2,7 +2,9 @@
 
 This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hervé Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
-### version 2.1 (development)
+The latest stable release is version *2.0*. 
+
+## version 2.1 (development)
 - Adding CMake Build
 
 - more to come!
