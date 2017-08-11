@@ -2,7 +2,7 @@
 //
 // ConstantsUtils.cc
 //
-// Contain all constants usefull for the pdftoxml tool. It's the initialization.
+// Contain all constants useful for the pdftoxml tool. It's the initialization.
 //
 // author: Sophie Andrieu
 // 05-2006
@@ -52,7 +52,7 @@ namespace ConstantsUtils
 	const char *NAME_ANNOT = "annot";
 	const char *NAME_DATA_DIR = "_data";
 	
-	const char *PDFTOXML_VERSION = "2.0";
+	const char *PDFTOXML_VERSION = "2.1";
 	const char *PDFTOXML_NAME = "pdftoxml";
 
 }

@@ -2,6 +2,30 @@
 
 This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hervé Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
+#### version 2.1 (development)
+- Adding CMake Build
+
+### Linux
+
+* Install libxml2 (development headers). See http://xmlsoft.org/ 
+
+* Install libmotif-dev (development headers) 
+
+* Xpdf is shipped as git submodule, to download it: 
+
+> git submodule update --init --recursive
+
+* To build: 
+
+> cmake .
+
+> make
+    
+### Windows 
+
+See `Compilation` for version 2.0 (at the moment nothing has changed)
+
+
 #### version 2.0 
 This following modifications have been made:
 
@@ -23,7 +47,9 @@ See the file INSTALL for more details.
 
 ### Linux
 
-* Install libxml2 (development headers). See http://xmlsoft.org/  
+* Install libxml2 (development headers). See http://xmlsoft.org/ 
+
+* Install libmotif-dev (development headers) 
 
 * Download xpdf. See http://www.foolabs.com/xpdf/
 
