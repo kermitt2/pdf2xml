@@ -1,5 +1,7 @@
 ## pdf2xml
 
+Note: further developments now takes place in the repository [pdfalto](https://github.com/kermitt2/pdfalto) which aims at extending and improving the original pdf2xml. 
+
 This is a modified version of pdf2xml available at http://sourceforge.net/projects/pdf2xml developed by XRCE (Hervé Déjean, Sophie Andrieu, Jean-Yves Vion-Dury, Emmanuel Giguet).
 
 The latest stable release is version *2.0*. 
